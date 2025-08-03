@@ -5,15 +5,14 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -42,9 +41,9 @@ class MainActivity : ComponentActivity() {
                 .fillMaxSize()
                 .navigationBarsPadding()
                 .statusBarsPadding()
-                .background(Color.Cyan),
+                .background(Color.Cyan)
+                .horizontalScroll(rememberScrollState()),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             Text(
                 modifier = Modifier
@@ -55,6 +54,50 @@ class MainActivity : ComponentActivity() {
                 text = "Ali 2",
                 fontSize = 24.sp,
                 textAlign = TextAlign.Center,
+                color = colorResource(R.color.white)
+            )
+            Text(
+                modifier = Modifier
+                    .width(140.dp)
+                    .padding(20.dp)
+                    .background(Color.DarkGray)
+                    .padding(20.dp),
+                text = "Ali",
+                textAlign = TextAlign.Center,
+                fontSize = 24.sp,
+                color = colorResource(R.color.white)
+            )
+            Text(
+                modifier = Modifier
+                    .width(140.dp)
+                    .padding(20.dp)
+                    .background(Color.DarkGray)
+                    .padding(20.dp),
+                text = "Ali",
+                textAlign = TextAlign.Center,
+                fontSize = 24.sp,
+                color = colorResource(R.color.white)
+            )
+            Text(
+                modifier = Modifier
+                    .width(140.dp)
+                    .padding(20.dp)
+                    .background(Color.DarkGray)
+                    .padding(20.dp),
+                text = "Ali",
+                textAlign = TextAlign.Center,
+                fontSize = 24.sp,
+                color = colorResource(R.color.white)
+            )
+            Text(
+                modifier = Modifier
+                    .width(140.dp)
+                    .padding(20.dp)
+                    .background(Color.DarkGray)
+                    .padding(20.dp),
+                text = "Ali",
+                textAlign = TextAlign.Center,
+                fontSize = 24.sp,
                 color = colorResource(R.color.white)
             )
             Text(
