@@ -45,6 +45,8 @@ class MainActivity : ComponentActivity() {
 
     private var passwordTextFiled = mutableStateOf(TextFieldValue())
 
+    private var error = mutableStateOf(false)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -79,18 +81,21 @@ class MainActivity : ComponentActivity() {
                 )
             }
 
-            LoginInputTextFiled(usernameTextFiled, false)
+            LoginInputTextFiled(usernameTextFiled, false, error)
 
-            LoginInputTextFiled(passwordTextFiled, true)
+            LoginInputTextFiled(passwordTextFiled, true, error)
 
             Button(
                 {
-                    if (usernameTextFiled.value.text.isNotEmpty() || passwordTextFiled.value.text.isNotEmpty())
+                    if (usernameTextFiled.value.text.isNotEmpty() && passwordTextFiled.value.text.isNotEmpty()) {
                         Toast.makeText(
                             this@MainActivity,
                             "${usernameTextFiled.value.text} \n ${passwordTextFiled.value.text}",
                             Toast.LENGTH_SHORT
                         ).show()
+                        error.value = false
+                    } else
+                        error.value = true
                 },
                 Modifier
                     .fillMaxWidth(0.8f)
@@ -105,7 +110,11 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    fun LoginInputTextFiled(textValue: MutableState<TextFieldValue>, isPassword: Boolean) {
+    fun LoginInputTextFiled(
+        textValue: MutableState<TextFieldValue>,
+        isPassword: Boolean,
+        enabledError: MutableState<Boolean>
+    ) {
         val textStyle = TextStyle(
             Color.Black,
             18.sp,
@@ -121,6 +130,11 @@ class MainActivity : ComponentActivity() {
                 textStyle = textStyle,
                 label = {
                     Text("UserName")
+                },
+                isError = enabledError.value,
+                supportingText = {
+                    if (enabledError.value)
+                        Text("Please Enter Field")
                 }
             )
         else
@@ -136,8 +150,13 @@ class MainActivity : ComponentActivity() {
                 },
                 keyboardOptions = KeyboardOptions(
                     autoCorrectEnabled = false,
-                    keyboardType = KeyboardType.Password
+                    keyboardType = KeyboardType.NumberPassword
                 ),
+                supportingText = {
+                    if (enabledError.value)
+                        Text("Please Enter Field")
+                },
+                isError = enabledError.value,
                 visualTransformation = PasswordVisualTransformation()
             )
     }
