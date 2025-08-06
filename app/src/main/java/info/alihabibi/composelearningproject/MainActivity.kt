@@ -7,22 +7,25 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CutCornerShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import java.nio.file.WatchEvent
 
 class MainActivity : ComponentActivity() {
 
@@ -41,58 +44,26 @@ class MainActivity : ComponentActivity() {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Box(
+            Image(
+                painterResource(R.drawable.picsum),
+                null,
                 Modifier
-                    .width(220.dp)
-                    .height(220.dp),
-            ) {
-                Image(
-                    painterResource(R.drawable.android_kotlin),
-                    null,
-                    Modifier.fillMaxSize(),
-                    contentScale = ContentScale.FillBounds
-                )
+                    .size(300.dp, 280.dp)
+                    .clip(CutCornerShape(20))
+                    .background(Color.Red),
+                contentScale = ContentScale.FillBounds
+            )
 
-                Box(
-                    Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        "Ali Habibi",
-                        Modifier.background(Color.Red),
-                        fontSize = 22.sp
-                    )
-                }
-
-                Box(
-                    Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.TopEnd
-                ) {
-                    Image(
-                        painterResource(R.drawable.android_kotlin),
-                        null,
-                        Modifier
-                            .width(50.dp)
-                            .height(50.dp),
-                        contentScale = ContentScale.FillBounds
-                    )
-                }
-
-                Box(
-                    Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.BottomStart
-                ) {
-                    Image(
-                        painterResource(R.drawable.android_kotlin),
-                        null,
-                        Modifier
-                            .width(60.dp)
-                            .height(50.dp)
-                            .background(Color.DarkGray)
-                            .padding(10.dp)
-                    )
-                }
-            }
+            Text(
+                "Ali Habibi",
+                Modifier
+                    .padding(top = 10.dp)
+                    .clip(RoundedCornerShape(35.dp))
+                    .background(Color.Yellow)
+                    .padding(15.dp),
+                Color.Black,
+                26.sp
+            )
         }
     }
 
