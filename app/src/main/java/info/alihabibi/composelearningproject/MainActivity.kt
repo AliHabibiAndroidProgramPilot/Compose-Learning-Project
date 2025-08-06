@@ -1,51 +1,30 @@
 package info.alihabibi.composelearningproject
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 class MainActivity : ComponentActivity() {
-
-    private var usernameTextFiled = mutableStateOf(TextFieldValue())
-
-    private var passwordTextFiled = mutableStateOf(TextFieldValue())
-
-    private var error = mutableStateOf(false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,107 +37,63 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun SetContentAndPreview() {
         Column(
-            Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .statusBarsPadding(),
+            Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Surface(
+            Box(
                 Modifier
-                    .width(240.dp)
-                    .height(250.dp)
-                    .padding(vertical = 20.dp),
-                CircleShape,
-                shadowElevation = 25.dp
+                    .width(220.dp)
+                    .height(220.dp),
             ) {
                 Image(
                     painterResource(R.drawable.android_kotlin),
                     null,
                     Modifier.fillMaxSize(),
-                    Alignment.Center,
-                    ContentScale.FillBounds
+                    contentScale = ContentScale.FillBounds
                 )
-            }
 
-            LoginInputTextFiled(usernameTextFiled, false, error)
+                Box(
+                    Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        "Ali Habibi",
+                        Modifier.background(Color.Red),
+                        fontSize = 22.sp
+                    )
+                }
 
-            LoginInputTextFiled(passwordTextFiled, true, error)
+                Box(
+                    Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.TopEnd
+                ) {
+                    Image(
+                        painterResource(R.drawable.android_kotlin),
+                        null,
+                        Modifier
+                            .width(50.dp)
+                            .height(50.dp),
+                        contentScale = ContentScale.FillBounds
+                    )
+                }
 
-            Button(
-                {
-                    if (usernameTextFiled.value.text.isNotEmpty() && passwordTextFiled.value.text.isNotEmpty()) {
-                        Toast.makeText(
-                            this@MainActivity,
-                            "${usernameTextFiled.value.text} \n ${passwordTextFiled.value.text}",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        error.value = false
-                    } else
-                        error.value = true
-                },
-                Modifier
-                    .fillMaxWidth(0.8f)
-                    .padding(vertical = 20.dp),
-                colors = ButtonDefaults.buttonColors(
-                    contentColor = Color.White
-                )
-            ) {
-                Text("Login", fontSize = 20.sp)
+                Box(
+                    Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.BottomStart
+                ) {
+                    Image(
+                        painterResource(R.drawable.android_kotlin),
+                        null,
+                        Modifier
+                            .width(60.dp)
+                            .height(50.dp)
+                            .background(Color.DarkGray)
+                            .padding(10.dp)
+                    )
+                }
             }
         }
-    }
-
-    @Composable
-    fun LoginInputTextFiled(
-        textValue: MutableState<TextFieldValue>,
-        isPassword: Boolean,
-        enabledError: MutableState<Boolean>
-    ) {
-        val textStyle = TextStyle(
-            Color.Black,
-            18.sp,
-            textAlign = TextAlign.Center
-        )
-        if (!isPassword)
-            TextField(
-                textValue.value,
-                { textValue.value = it },
-                Modifier
-                    .fillMaxSize(0.8f)
-                    .padding(vertical = 20.dp),
-                textStyle = textStyle,
-                label = {
-                    Text("UserName")
-                },
-                isError = enabledError.value,
-                supportingText = {
-                    if (enabledError.value)
-                        Text("Please Enter Field")
-                }
-            )
-        else
-            TextField(
-                textValue.value,
-                { textValue.value = it },
-                Modifier
-                    .fillMaxSize(0.8f)
-                    .padding(vertical = 20.dp),
-                textStyle = textStyle,
-                label = {
-                    Text("Password")
-                },
-                keyboardOptions = KeyboardOptions(
-                    autoCorrectEnabled = false,
-                    keyboardType = KeyboardType.NumberPassword
-                ),
-                supportingText = {
-                    if (enabledError.value)
-                        Text("Please Enter Field")
-                },
-                isError = enabledError.value,
-                visualTransformation = PasswordVisualTransformation()
-            )
     }
 
     @Preview("Preview", widthDp = 450, heightDp = 800, showBackground = true)
