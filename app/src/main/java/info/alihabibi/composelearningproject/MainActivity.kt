@@ -1,30 +1,26 @@
 package info.alihabibi.composelearningproject
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.ArrowBack
-import androidx.compose.material.icons.rounded.MoreVert
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.sp
 
 class MainActivity : ComponentActivity() {
 
@@ -43,94 +39,48 @@ class MainActivity : ComponentActivity() {
             Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
-            TopAppBar(
-                title = {
-                    Text("Ali Habibi", fontWeight = FontWeight.Bold)
-                },
-                navigationIcon = {
-                    IconButton(
-                        {},
-                        Modifier
-                            .size(40.dp)
-                            .padding(start = 10.dp)
-                    ) {
-                        Icon(
-                            Icons.AutoMirrored.Rounded.ArrowBack,
-                            null
-                        )
-                    }
-                },
-                actions = {
-                    IconButton(
-                        {},
-                        Modifier
-                            .size(40.dp)
-                            .padding(end = 10.dp)
-                    ) {
-                        Icon(
-                            Icons.Rounded.MoreVert,
-                            null
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Blue,
-                    navigationIconContentColor = Color.Green,
-                    actionIconContentColor = Color.Magenta,
-                    titleContentColor = Color.White
-                )
-            )
+            AlertDialog(
+                onDismissRequest = {
 
-            /*Image(
-                painterResource(R.drawable.android_kotlin), null, Modifier.size(100.dp)
+                },
+                confirmButton = {
+                    Text(
+                        "Yes",
+                        Modifier.clickable {
+                            Toast.makeText(this@MainActivity, "YES", Toast.LENGTH_SHORT).show()
+                        },
+                        fontSize = 20.sp
+                    )
+                },
+                dismissButton = {
+                    Text(
+                        "No",
+                        Modifier.clickable {
+                            Toast.makeText(this@MainActivity, "NO", Toast.LENGTH_SHORT).show()
+                        },
+                        fontSize = 20.sp
+                    )
+                },
+                title = {
+                    Text(
+                        "Dialog Title",
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                },
+                text = {
+                    Text(
+                        "Dialog Message is this and here so look it!",
+                        fontSize = 20.sp,
+                        fontFamily = FontFamily.Monospace,
+                    )
+                }
             )
-            Image(
-                painterResource(R.drawable.android_kotlin), null, Modifier.size(100.dp)
-            )
-            Image(
-                painterResource(R.drawable.android_kotlin), null, Modifier.size(100.dp)
-            )
-            Image(
-                painterResource(R.drawable.android_kotlin), null, Modifier.size(100.dp)
-            )
-            Image(
-                painterResource(R.drawable.android_kotlin), null, Modifier.size(100.dp)
-            )
-            Image(
-                painterResource(R.drawable.android_kotlin), null, Modifier.size(120.dp)
-            )
-            Image(
-                painterResource(R.drawable.android_kotlin), null, Modifier.size(120.dp)
-            )
-            Image(
-                painterResource(R.drawable.android_kotlin), null, Modifier.size(120.dp)
-            )
-            Image(
-                painterResource(R.drawable.android_kotlin), null, Modifier.size(120.dp)
-            )
-            Image(
-                painterResource(R.drawable.android_kotlin), null, Modifier.size(120.dp)
-            )
-            Image(
-                painterResource(R.drawable.android_kotlin), null, Modifier.size(120.dp)
-            )
-            Image(
-                painterResource(R.drawable.android_kotlin), null, Modifier.size(120.dp)
-            )
-            Image(
-                painterResource(R.drawable.android_kotlin), null, Modifier.size(120.dp)
-            )
-            Image(
-                painterResource(R.drawable.android_kotlin), null, Modifier.size(120.dp)
-            )
-            Image(
-                painterResource(R.drawable.android_kotlin), null, Modifier.size(120.dp)
-            )
-            Image(
-                painterResource(R.drawable.android_kotlin), null, Modifier.size(120.dp)
-            )*/
         }
     }
 
