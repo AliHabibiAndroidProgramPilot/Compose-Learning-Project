@@ -9,16 +9,22 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.Warning
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,6 +34,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 class MainActivity : ComponentActivity() {
+
+    private val isShowingDialog = mutableStateOf(false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +55,24 @@ class MainActivity : ComponentActivity() {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Dialog()
+            if (isShowingDialog.value)
+                Dialog()
+
+            Button(
+                {
+                    isShowingDialog.value = true
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp),
+                shape = RoundedCornerShape(15.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Black,
+                    contentColor = Color.White
+                )
+            ) {
+                Text("Show Dialog", fontSize = 19.sp)
+            }
         }
     }
 
@@ -55,13 +80,14 @@ class MainActivity : ComponentActivity() {
     fun Dialog() {
         AlertDialog(
             onDismissRequest = {
-                true
+                isShowingDialog.value = false
             },
             confirmButton = {
                 Text(
                     "Yes",
                     Modifier.clickable {
                         Toast.makeText(this@MainActivity, "YES", Toast.LENGTH_SHORT).show()
+                        isShowingDialog.value = false
                     },
                     fontSize = 20.sp,
                     color = Color.White
@@ -70,8 +96,10 @@ class MainActivity : ComponentActivity() {
             dismissButton = {
                 Text(
                     "No",
-                    Modifier.clickable {
+                    Modifier
+                        .clickable {
                         Toast.makeText(this@MainActivity, "NO", Toast.LENGTH_SHORT).show()
+                        isShowingDialog.value = false
                     },
                     fontSize = 20.sp,
                     color = Color.White
