@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,18 +17,21 @@ import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -44,17 +46,20 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun SetContentAndPreview() {
         val themeOption = listOf("Light Mode", "Nigh Mode", "System Default")
         val (radioSelectedOption, radioOnOptionSelected) = remember { mutableStateOf(themeOption[0]) }
         val (checkboxSelectedOption, checkboxOnOptionSelected) = remember { mutableStateOf(false) }
         val (switchSelectedOption, switchOnOptionSelected) = remember { mutableStateOf(false) }
+        val (sliderValueChanged, sliderOnValueChanged) = remember { mutableFloatStateOf(50f) }
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .navigationBarsPadding()
-                .statusBarsPadding(),
+                .statusBarsPadding()
+                .padding(start = 10.dp, end = 10.dp),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -131,6 +136,26 @@ class MainActivity : ComponentActivity() {
                     style = MaterialTheme.typography.bodyMedium.copy(fontSize = 16.sp)
                 )
             }
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Slider(
+                    value = sliderValueChanged,
+                    onValueChange = {
+                        sliderOnValueChanged(it)
+                    },
+                    modifier = Modifier.padding(start = 12.dp, end = 12.dp),
+                    valueRange = (1.0f..100.0f),
+                    colors = SliderDefaults.colors(
+                        activeTrackColor = Color.Blue,
+                        inactiveTrackColor = Color.DarkGray
+                    )
+                )
+            }
+            Text(
+                "Current Progress: ${sliderValueChanged.toInt()}",
+                style = MaterialTheme.typography.bodyMedium.copy(fontSize = 16.sp)
+            )
         }
     }
 
