@@ -1,42 +1,31 @@
 package info.alihabibi.composelearningproject
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.media.AudioManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.selection.selectable
-import androidx.compose.foundation.selection.selectableGroup
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Slider
-import androidx.compose.material3.SliderDefaults
-import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import kotlin.properties.Delegates
 
 class MainActivity : ComponentActivity() {
+
+    private var audioManager by Delegates.notNull<AudioManager>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,117 +33,54 @@ class MainActivity : ComponentActivity() {
         setContent {
             SetContentAndPreview()
         }
+        audioManager = getSystemService(AUDIO_SERVICE) as AudioManager
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun SetContentAndPreview() {
-        val themeOption = listOf("Light Mode", "Nigh Mode", "System Default")
-        val (radioSelectedOption, radioOnOptionSelected) = remember { mutableStateOf(themeOption[0]) }
-        val (checkboxSelectedOption, checkboxOnOptionSelected) = remember { mutableStateOf(false) }
-        val (switchSelectedOption, switchOnOptionSelected) = remember { mutableStateOf(false) }
-        val (sliderValueChanged, sliderOnValueChanged) = remember { mutableFloatStateOf(50f) }
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .navigationBarsPadding()
-                .statusBarsPadding()
-                .padding(start = 10.dp, end = 10.dp),
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp, 50.dp)
-                    .selectableGroup(),
-                verticalAlignment = Alignment.Bottom,
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                themeOption.forEach { text ->
-                    Row(
-                        modifier = Modifier
-                            .weight(1f)
-                            .selectable(
-                                selected = (text == radioSelectedOption),
-                                onClick = { radioOnOptionSelected(text) },
-                                role = Role.RadioButton
-                            )
-                            .padding(horizontal = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        RadioButton(
-                            selected = (text == radioSelectedOption),
-                            onClick = null
-                        )
-                        Spacer(Modifier.padding(8.dp))
-                        Text(
-                            text = text,
-                            style = MaterialTheme.typography.bodyMedium.copy(fontSize = 16.sp)
-                        )
+        val sliderState = remember {
+            mutableFloatStateOf(audioManager.getStreamVolume(AudioManager.STREAM_MUSIC).toFloat())
+        }
+        DisposableEffect(Unit) {
+            val receiver = object : BroadcastReceiver() {
+                override fun onReceive(context: Context?, intent: Intent?) {
+                    if (intent?.action == "android.media.VOLUME_CHANGED_ACTION") {
+                        sliderState.floatValue =
+                            audioManager.getStreamVolume(AudioManager.STREAM_MUSIC).toFloat()
                     }
                 }
             }
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Checkbox(
-                    checked = checkboxSelectedOption,
-                    onCheckedChange = {
-                        checkboxOnOptionSelected(it)
-                    },
-                    modifier = Modifier.padding(10.dp, 50.dp),
-                    colors = CheckboxDefaults.colors(
-                        checkedColor = Color.DarkGray,
-                        uncheckedColor = Color.Black,
-                        checkmarkColor = Color.White
-                    )
-                )
-
-                Text(
-                    text = "Accept The Privacy And Policy",
-                    style = MaterialTheme.typography.bodyMedium.copy(fontSize = 16.sp)
-                )
+            this@MainActivity.registerReceiver(
+                receiver,
+                IntentFilter("android.media.VOLUME_CHANGED_ACTION")
+            )
+            onDispose {
+                this@MainActivity.unregisterReceiver(receiver)
             }
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Switch(
-                    checked = switchSelectedOption,
-                    onCheckedChange = {
-                        switchOnOptionSelected(it)
-                    },
-                    colors = SwitchDefaults.colors(
-                        checkedTrackColor = Color.Black,
-                        checkedThumbColor = Color.Yellow
+        }
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .statusBarsPadding()
+                .padding(start = 10.dp, top = 30.dp, end = 10.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Slider(
+                value = sliderState.floatValue,
+                onValueChange = { progress ->
+                    sliderState.floatValue = progress
+                    audioManager.setStreamVolume(
+                        AudioManager.STREAM_MUSIC,
+                        progress.toInt(),
+                        AudioManager.FLAG_PLAY_SOUND
                     )
-                )
-                Spacer(Modifier.padding(horizontal = 10.dp))
-                Text(
-                    text = "Accept The Privacy And Policy",
-                    style = MaterialTheme.typography.bodyMedium.copy(fontSize = 16.sp)
-                )
-            }
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Slider(
-                    value = sliderValueChanged,
-                    onValueChange = {
-                        sliderOnValueChanged(it)
-                    },
-                    modifier = Modifier.padding(start = 12.dp, end = 12.dp),
-                    valueRange = (1.0f..100.0f),
-                    colors = SliderDefaults.colors(
-                        activeTrackColor = Color.Blue,
-                        inactiveTrackColor = Color.DarkGray
+                    audioManager.adjustVolume(
+                        AudioManager.ADJUST_SAME,
+                        AudioManager.FLAG_SHOW_UI
                     )
-                )
-            }
-            Text(
-                "Current Progress: ${sliderValueChanged.toInt()}",
-                style = MaterialTheme.typography.bodyMedium.copy(fontSize = 16.sp)
+                },
+                valueRange =
+                    0.0f..audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC).toFloat()
             )
         }
     }
