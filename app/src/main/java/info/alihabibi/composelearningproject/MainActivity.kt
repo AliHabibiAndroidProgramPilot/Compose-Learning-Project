@@ -18,6 +18,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastRoundToInt
@@ -35,13 +37,13 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun SetContentAndPreview() {
         val (onSliderStateValue, onSliderStateValueChanged) = remember {
-            mutableFloatStateOf(0.0f)
+            mutableFloatStateOf(20.0f)
         }
 
         Column(
             modifier = Modifier
                 .statusBarsPadding()
-                .padding(20.dp)
+                .padding(10.dp)
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
@@ -52,14 +54,25 @@ class MainActivity : ComponentActivity() {
                     onSliderStateValueChanged(it)
                 },
                 modifier = Modifier
-                    .fillMaxWidth(0.8f),
-                valueRange = (0.0f..100.0f)
+                    .fillMaxWidth(0.9f),
+                valueRange = (0.0f..60.0f)
             )
 
             Text(
                 onSliderStateValue.removeZero(onSliderStateValue),
                 color = Color.Black,
                 fontSize = 26.sp
+            )
+
+            Text(
+                "Sample Text",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 40.dp),
+                color = Color.Black,
+                textAlign = TextAlign.Center,
+                fontFamily = FontFamily.SansSerif,
+                fontSize = onSliderStateValue.sp
             )
         }
     }
