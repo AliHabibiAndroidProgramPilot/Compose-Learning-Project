@@ -6,25 +6,39 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Slider
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastRoundToInt
 
 class MainActivity : ComponentActivity() {
+
+    private val textColors = arrayListOf("Color Red", "Color Magenta", "Color Blue")
+
+    private val sliderStateValue = mutableFloatStateOf(20.0f)
+
+    private val switchStateValue = mutableStateOf(false)
+
+    private val radioStateValue = mutableStateOf(textColors.first())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,10 +50,6 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun SetContentAndPreview() {
-        val (onSliderStateValue, onSliderStateValueChanged) = remember {
-            mutableFloatStateOf(20.0f)
-        }
-
         Column(
             modifier = Modifier
                 .statusBarsPadding()
@@ -49,17 +59,41 @@ class MainActivity : ComponentActivity() {
             verticalArrangement = Arrangement.Center
         ) {
             Slider(
-                value = onSliderStateValue,
+                value = sliderStateValue.floatValue,
                 onValueChange = {
-                    onSliderStateValueChanged(it)
+                    sliderStateValue.floatValue = it
                 },
                 modifier = Modifier
                     .fillMaxWidth(0.9f),
                 valueRange = (0.0f..60.0f)
             )
 
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                textColors.forEach {
+                    Text(it, fontSize = 14.sp)
+                    RadioButton(
+                        selected = (radioStateValue.value == it),
+                        onClick = {
+                           radioStateValue.value = it
+                        }
+                    )
+                }
+            }
+
+            Switch(
+                checked = switchStateValue.value,
+                onCheckedChange = {
+                    switchStateValue.value = it
+                },
+                modifier = Modifier
+                    .scale(1.2f)
+                    .padding(vertical = 10.dp)
+            )
+
             Text(
-                onSliderStateValue.removeZero(onSliderStateValue),
+                sliderStateValue.floatValue.removeZero(sliderStateValue.floatValue),
                 color = Color.Black,
                 fontSize = 26.sp
             )
@@ -69,10 +103,16 @@ class MainActivity : ComponentActivity() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 40.dp),
-                color = Color.Black,
+                color = when (radioStateValue.value) {
+                    textColors[0] -> Color.Red
+                    textColors[1] -> Color.Magenta
+                    textColors[2] -> Color.Blue
+                    else -> Color.Red
+                },
                 textAlign = TextAlign.Center,
                 fontFamily = FontFamily.SansSerif,
-                fontSize = onSliderStateValue.sp
+                fontSize = sliderStateValue.floatValue.sp,
+                fontWeight = if (switchStateValue.value) FontWeight.ExtraBold else FontWeight.Normal
             )
         }
     }
